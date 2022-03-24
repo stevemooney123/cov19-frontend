@@ -1,7 +1,0 @@
-{
-  "name": "cov19-frontend",
-  "integrations": {
-    "capacitor": {}
-  },
-  "type": "react"
-}
