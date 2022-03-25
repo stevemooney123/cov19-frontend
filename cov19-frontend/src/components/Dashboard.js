@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { Container, Row, Col, Card, Button } from 'react-bootstrap'
 import AppCard from './AppCard'
 import axios from 'axios'
-
+import configData from '../config/config.json'
 export default class Dashboard extends Component {
 
   state = {
@@ -10,7 +10,7 @@ export default class Dashboard extends Component {
   }
 
   componentDidMount() {
-    axios.get(`http://localhost:8000/api/covid?areaType=nation&areaName=Northern Ireland&metric=newCases&metricName=newCasesByPublishDate&page=1`)
+    axios.get(configData.BASE_URL + `areaType=nation&areaName=Northern Ireland&metric=newCases&metricName=newCasesByPublishDate&page=1`)
       .then(res => {
         const metrics = res.data;
         this.setState({ metrics });
