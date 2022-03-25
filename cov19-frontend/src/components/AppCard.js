@@ -4,7 +4,7 @@ import { Table, Card, Button } from 'react-bootstrap'
 export default class AppCard extends Component {
   render() {
     return (
-        <>
+        <div>
              
       <Card style={{ width: '18rem', marginBottom: '1rem', display: 'flex', alignItems: 'center', alignContent: 'center', alignSelf: 'center' }}>
   <Card.Body>
@@ -14,7 +14,7 @@ export default class AppCard extends Component {
   <tbody>
     <tr>
       <td>1</td>
-      <td>Mark</td>
+      <td>{this.props.data}</td>
     </tr>
     <tr>
       <td>2</td>
@@ -29,7 +29,7 @@ export default class AppCard extends Component {
     </Card.Text>
   </Card.Body>
 </Card>
-        </>
+        </div>
  
     )
   }
