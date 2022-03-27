@@ -1,5 +1,5 @@
 import React, {Component} from 'react'
-import {Table, Card, Button} from 'react-bootstrap'
+import {Table, Card, Button, Col} from 'react-bootstrap'
 
 export default class AppCard extends Component {
     render() {
@@ -11,18 +11,14 @@ export default class AppCard extends Component {
                         <Card.Text>
                             <Table striped bordered hover>
                                 <tbody>
-                                <tr>
-                                    <td><strong>{this.props.metricTitle}</strong></td>
-                                    <td>{this.props.value}</td>
-                                </tr>
-                                <tr>
-                                    <td>2</td>
-                                    <td>Jacob</td>
-                                </tr>
-                                <tr>
-                                    <td>3</td>
-                                    <td colSpan={2}>Larry the Bird</td>
-                                </tr>
+
+                                {
+                                    this.props.data.map((item, i) => (
+                                        <tr key={i}>
+                                            <td><strong>{item.key}</strong></td>
+                                            <td>{item.value}</td>
+                                        </tr>
+                                    ))}
                                 </tbody>
                             </Table>
                         </Card.Text>

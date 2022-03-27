@@ -7,25 +7,38 @@ import configData from '../config/config.json'
 export default class Dashboard extends Component {
 
     state = {
-        metrics: []
+        metrics: [],
+        title: ""
     }
 
     componentDidMount() {
         axios.get(configData.BASE_URL + `last7?areaType=nation&areaName=Northern Ireland&metric=dailyCases&metricName=newCasesByPublishDate&page=11`)
             .then(res => {
-                const metrics = "1234";
-                //console.log(metrics);
-                const info = {
-                    title: "Cases",
-                    key: "New Cases",
-                    value: metrics
+                const metrics = res.data;
+
+                for (const [key, value] of Object.entries(metrics)) {
+                    const obj = {
+                        key: "",
+                        value: 0,
+                        title: ""
+                    }
+
+                    const title = "Cases";
+                    this.setState({title: title});
+                    const resultKey = key.replace(/([A-Z])/g, " $1");
+                    const finalResultKey = resultKey.charAt(0).toUpperCase() + resultKey.slice(1);
+
+
+                    obj.key = finalResultKey;
+                    obj.value = value;
+
+                    this.state.metrics.push(obj);
+
                 }
 
 
-                this.state.metrics.push(info);
                 this.setState({metrics: this.state.metrics});
 
-                console.log(this.state.metrics);
             })
     }
 
@@ -35,12 +48,10 @@ export default class Dashboard extends Component {
 
                 <Container>
                     <Row>
-                        {
-                            this.state.metrics.map((item, i) => (
-                            <span key={i}>
-                                <Col md={3}> <AppCard title={item.title} metricTitle={item.key} value={item.value}/></Col>
+
+                        <span>
+                                <Col md={3}> <AppCard title={this.state.title} data={this.state.metrics}/></Col>
                             </span>
-                        ))}
 
                     </Row>
 
