@@ -8,7 +8,7 @@ export default class AppCard extends Component {
             <div>
                 <Card>
                     <Card.Body>
-                        <Card.Title>{this.props.data.title}</Card.Title>
+                        <Card.Title>{this.props.data[0].title}</Card.Title>
                         <Card.Text>
                             <Table striped bordered hover>
                                 <tbody>

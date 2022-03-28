@@ -64,7 +64,9 @@ export default class Dashboard extends Component {
                     obj.key = key;
                     obj.value = value;
 
+
                     if (title == "Cases") {
+                        console.log(obj);
                         this.state.cases.push(obj);
                     }
 
