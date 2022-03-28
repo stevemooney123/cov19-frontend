@@ -12,10 +12,15 @@ export default class AppCard extends Component {
                         <Card.Text>
                             <Table striped bordered hover>
                                 <tbody>
-                                <tr>
-                                    <td>{this.props.data.key}</td>
-                                    <td>{this.props.data.value}</td>
-                                </tr>
+
+                                    {
+                                        this.props.data.map((item, i) => (
+                                            <tr>
+                                            <td key={item.key + i}>{item.key}</td>
+                                                <td key={i}>{item.value}</td>
+                                            </tr>
+                                        ))}
+
                                 </tbody>
                             </Table>
                         </Card.Text>

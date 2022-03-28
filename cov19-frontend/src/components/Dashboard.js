@@ -7,7 +7,8 @@ import configData from '../config/config.json'
 export default class Dashboard extends Component {
 
     state = {
-        metrics: [],
+        cases: [],
+        deaths: [],
         title: ""
     }
 
@@ -16,37 +17,66 @@ export default class Dashboard extends Component {
             .then(res => {
                 const metrics = res.data;
 
-                Object.values(metrics).forEach(val => {
 
-                    Object.values(val).forEach(v => {
+                const keys = Object.keys(metrics);
+                for (let i = 0; i < keys.length; i++) {
 
-                        for (const [key, value] of Object.entries(v)) {
-                            const obj = {
-                                title: "",
-                                key: "",
-                                value: 0,
-                            }
+                    if (keys[i] == "Cases") {
 
-                            obj.title = key;
+                        this.getMetrics(metrics, keys[i]);
+                        this.setState({cases: this.state.cases});
+                    }
 
-                            obj.key = key;
-                            obj.value = value;
-                            console.log(obj);
-                            this.state.metrics.push(obj);
+                    if (keys[i] == "Deaths") {
 
-
-                        }
-
-                    });
-
-                });
+                        this.getMetrics(metrics, keys[i]);
+                        this.setState({deaths: this.state.deaths});
+                    }
+                }
 
 
-                this.setState({metrics: this.state.metrics});
+
 
             })
     }
 
+
+    getMetrics(metrics, title) {
+
+        const filtered = Object.fromEntries(
+            Object.entries(metrics).filter(
+                ([key, val]) => key.includes(title)
+            )
+        );
+
+        Object.values(filtered).forEach(val => {
+
+            Object.values(val).forEach(v => {
+
+                for (const [key, value] of Object.entries(v)) {
+                    const obj = {
+                        title: "",
+                        key: "",
+                        value: 0,
+                    }
+
+                    obj.title = title;
+                    obj.key = key;
+                    obj.value = value;
+
+                    if (title == "Cases") {
+                        this.state.cases.push(obj);
+                    }
+
+                    if (title == "Deaths") {
+                        this.state.deaths.push(obj);
+                    }
+
+                }
+            });
+
+        });
+    }
 
     render() {
         return (
@@ -55,13 +85,8 @@ export default class Dashboard extends Component {
                 <Container>
                     <Row>
 
-                        {
-                            this.state.metrics.map((item, i) => (
-                                <span>
-                                <Col key={item.key}> <AppCard  data={item}/></Col>
-                            </span>
-
-                            ))}
+                        <Col> <AppCard data={this.state.cases}/></Col>
+                        <Col> <AppCard data={this.state.deaths}/></Col>
 
                     </Row>
 
