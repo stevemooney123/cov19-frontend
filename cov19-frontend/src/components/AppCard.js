@@ -3,22 +3,19 @@ import {Table, Card, Button, Col} from 'react-bootstrap'
 
 export default class AppCard extends Component {
     render() {
+        console.log(this.props.data);
         return (
             <div>
                 <Card>
                     <Card.Body>
-                        <Card.Title>{this.props.title}</Card.Title>
+                        <Card.Title>{this.props.data.title}</Card.Title>
                         <Card.Text>
                             <Table striped bordered hover>
                                 <tbody>
-
-                                {
-                                    this.props.data.map((item, i) => (
-                                        <tr key={i}>
-                                            <td><strong>{item.key}</strong></td>
-                                            <td>{item.value}</td>
-                                        </tr>
-                                    ))}
+                                <tr>
+                                    <td>{this.props.data.key}</td>
+                                    <td>{this.props.data.value}</td>
+                                </tr>
                                 </tbody>
                             </Table>
                         </Card.Text>

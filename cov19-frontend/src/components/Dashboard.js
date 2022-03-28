@@ -16,31 +16,37 @@ export default class Dashboard extends Component {
             .then(res => {
                 const metrics = res.data;
 
-                for (const [key, value] of Object.entries(metrics)) {
-                    const obj = {
-                        key: "",
-                        value: 0,
-                        title: ""
-                    }
+                Object.values(metrics).forEach(val => {
 
-                    const title = "Cases";
-                    this.setState({title: title});
-                    const resultKey = key.replace(/([A-Z])/g, " $1");
-                    const finalResultKey = resultKey.charAt(0).toUpperCase() + resultKey.slice(1);
+                    Object.values(val).forEach(v => {
+
+                        for (const [key, value] of Object.entries(v)) {
+                            const obj = {
+                                title: "",
+                                key: "",
+                                value: 0,
+                            }
+
+                            obj.title = key;
+
+                            obj.key = key;
+                            obj.value = value;
+                            console.log(obj);
+                            this.state.metrics.push(obj);
 
 
-                    obj.key = finalResultKey;
-                    obj.value = value;
+                        }
 
-                    this.state.metrics.push(obj);
+                    });
 
-                }
+                });
 
 
                 this.setState({metrics: this.state.metrics});
 
             })
     }
+
 
     render() {
         return (
@@ -49,9 +55,13 @@ export default class Dashboard extends Component {
                 <Container>
                     <Row>
 
-                        <span>
-                                <Col md={3}> <AppCard title={this.state.title} data={this.state.metrics}/></Col>
+                        {
+                            this.state.metrics.map((item, i) => (
+                                <span>
+                                <Col key={item.key}> <AppCard  data={item}/></Col>
                             </span>
+
+                            ))}
 
                     </Row>
 
