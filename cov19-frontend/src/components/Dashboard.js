@@ -104,10 +104,11 @@ export default class Dashboard extends Component {
 
         console.log(this.state.val);
 
+        this.state.metrics = [];
+
         this.state.areaName = this.state.val;
 
         await this.GetData();
-        this.forceUpdate();
     };
 
     render() {
