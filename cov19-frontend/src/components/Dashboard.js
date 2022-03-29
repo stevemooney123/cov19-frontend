@@ -1,22 +1,22 @@
 import React, {Component} from 'react'
 import {Container, Row, Col, Card, Button} from 'react-bootstrap'
 import AppCard from './AppCard'
-import axios from 'axios'
 import configData from '../config/config.json'
+import API from "../services/API";
 
 export default class Dashboard extends Component {
 
     state = {
         cases: [],
         deaths: [],
+        metrics: [],
         title: ""
     }
 
-    componentDidMount() {
-        axios.get(configData.BASE_URL + `last7?areaType=nation&areaName=Northern Ireland&metric=dailyCases&metricName=newCasesByPublishDate&page=11`)
+    async componentDidMount() {
+        await API.get(configData.BASE_URL + `last7?areaType=nation&areaName=Northern Ireland&metric=dailyCases&metricName=newCasesByPublishDate&page=11`)
             .then(res => {
                 const metrics = res.data;
-
 
                 const keys = Object.keys(metrics);
                 for (let i = 0; i < keys.length; i++) {
@@ -25,15 +25,22 @@ export default class Dashboard extends Component {
 
                         this.getMetrics(metrics, keys[i]);
                         this.setState({cases: this.state.cases});
+
+                        this.state.metrics.push(this.state.cases);
+
+
+                        this.setState({metrics:  this.state.metrics});
                     }
 
                     if (keys[i] == "Deaths") {
 
                         this.getMetrics(metrics, keys[i]);
                         this.setState({deaths: this.state.deaths});
+                        this.state.metrics.push(this.state.deaths);
+
+                        this.setState({metrics:  this.state.metrics});
                     }
                 }
-
 
 
 
@@ -66,13 +73,14 @@ export default class Dashboard extends Component {
 
 
                     if (title == "Cases") {
-                        console.log(obj);
+
                         this.state.cases.push(obj);
                     }
 
                     if (title == "Deaths") {
                         this.state.deaths.push(obj);
                     }
+
 
                 }
             });
@@ -87,8 +95,15 @@ export default class Dashboard extends Component {
                 <Container>
                     <Row>
 
-                        <Col> <AppCard data={this.state.cases}/></Col>
-                        <Col> <AppCard data={this.state.deaths}/></Col>
+                        {this.state.metrics.map((item, i) => (
+
+
+                            <Col key={i}> <AppCard data={item}/></Col>
+
+                        ))}
+
+
+
 
                     </Row>
 
