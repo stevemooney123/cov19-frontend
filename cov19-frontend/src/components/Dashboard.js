@@ -1,8 +1,9 @@
 import React, {Component} from 'react'
-import {Container, Row, Col, Card, Button} from 'react-bootstrap'
+import {Container, Row, Col, Card, Form, Button} from 'react-bootstrap'
 import AppCard from './AppCard'
 import configData from '../config/config.json'
 import API from "../services/API";
+
 
 export default class Dashboard extends Component {
 
@@ -10,41 +11,50 @@ export default class Dashboard extends Component {
         cases: [],
         deaths: [],
         metrics: [],
-        title: ""
+        title: "",
+        areaName: ""
     }
 
-    async componentDidMount() {
-        await API.get(configData.BASE_URL + `last7?areaType=nation&areaName=Northern Ireland&metric=dailyCases&metricName=newCasesByPublishDate&page=11`)
-            .then(res => {
-                const metrics = res.data;
+    async GetData() {
 
+        await API.get(configData.BASE_URL + `last7?areaType=nation&areaName=` + this.state.areaName + `&metric=dailyCases&metricName=newCasesByPublishDate&page=11`)
+            .then(async res => {
+                const metrics = res.data;
+                console.log(metrics)
                 const keys = Object.keys(metrics);
                 for (let i = 0; i < keys.length; i++) {
 
                     if (keys[i] == "Cases") {
 
                         this.getMetrics(metrics, keys[i]);
-                        this.setState({cases: this.state.cases});
+                        await this.setState({cases: this.state.cases});
 
                         this.state.metrics.push(this.state.cases);
 
 
-                        this.setState({metrics:  this.state.metrics});
+                        await this.setState({metrics: this.state.metrics});
                     }
 
                     if (keys[i] == "Deaths") {
 
                         this.getMetrics(metrics, keys[i]);
-                        this.setState({deaths: this.state.deaths});
+                        await this.setState({deaths: this.state.deaths});
                         this.state.metrics.push(this.state.deaths);
 
-                        this.setState({metrics:  this.state.metrics});
+                        await this.setState({metrics: this.state.metrics});
                     }
                 }
 
-
+                this.state.areaName = "";
+                this.state.cases = [];
+                this.state.deaths = [];
 
             })
+    }
+
+    async componentDidMount() {
+        this.state.areaName = "Northern Ireland";
+        await this.GetData();
     }
 
 
@@ -78,6 +88,7 @@ export default class Dashboard extends Component {
                     }
 
                     if (title == "Deaths") {
+
                         this.state.deaths.push(obj);
                     }
 
@@ -88,9 +99,43 @@ export default class Dashboard extends Component {
         });
     }
 
+    onSubmit = async (e) => {
+        e.preventDefault();
+
+        console.log(this.state.val);
+
+        this.state.areaName = this.state.val;
+
+        await this.GetData();
+        this.forceUpdate();
+    };
+
     render() {
+
         return (
             <div>
+
+                <Container>
+                    <Row>
+                        <Col>
+
+                            <Form onSubmit={this.onSubmit}>
+                                <Form.Group className="mb-4" controlId="areaName">
+                                    <Form.Label>Nation</Form.Label>
+                                    <Form.Control type="areaName" placeholder="Enter area name" name="areaName"
+                                                  onChange={e => this.setState({val: e.target.value})}/>
+                                    <Form.Text className="text-muted">
+                                        This will update the dashboard to show the chosen nation
+                                    </Form.Text>
+                                </Form.Group>
+                                <Button variant="primary" type="submit" className="mb-4">
+                                    Search
+                                </Button>
+                            </Form>
+                        </Col>
+                    </Row>
+                </Container>
+
 
                 <Container>
                     <Row>
@@ -101,8 +146,6 @@ export default class Dashboard extends Component {
                             <Col key={i}> <AppCard data={item}/></Col>
 
                         ))}
-
-
 
 
                     </Row>
